@@ -4,23 +4,23 @@
 	window.onload = function()
 	{
          
-         //Jika posisi kantor rt belum ada, maka posisi peta akan menampilkan seluruh Indonesia
-	<?php if (!empty($desa['lat']) && !empty($desa['lng'])): ?>
-    var posisi = [<?=$desa['lat'].",".$desa['lng']?>];
-    var zoom = <?=$desa['zoom'] ?: 18?>;
+         //Jika posisi kantor dusun belum ada, maka posisi peta akan menampilkan seluruh Indonesia
+	<?php if (!empty($dusun['lat']) && !empty($dusun['lng'])): ?>
+    var posisi = [<?=$dusun['lat'].",".$dusun['lng']?>];
+    var zoom = <?=$dusun['zoom'] ?: 10?>;
 	<?php else: ?>
-    var posisi = [-1.0546279422758742,116.71875000000001];
-    var zoom = 4;
+    var posisi = [<?=$desa['lat'].",".$desa['lng']?>];
+    var zoom = <?=$desa['zoom'] ?: 10?>;
 	<?php endif; ?>
 	//Menggunakan https://github.com/codeofsumit/leaflet.pm
 	//Inisialisasi tampilan peta
-  var peta_desa = L.map('map').setView(posisi, zoom);
+  var peta_dusun = L.map('map').setView(posisi, zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 	{
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
     id: 'mapbox.streets'
-  }).addTo(peta_desa);
+  }).addTo(peta_dusun);
 
   //Tombol yang akan dimunculkan dipeta
   var options =
@@ -38,10 +38,10 @@
   };
 
   //Menambahkan toolbar ke peta
-  peta_desa.pm.addControls(options);
+  peta_dusun.pm.addControls(options);
 
   //Menambahkan Peta wilayah
-  peta_desa.on('pm:create', function(e)
+  peta_dusun.on('pm:create', function(e)
 	{
     var type = e.layerType;
     var layer = e.layer;
@@ -54,7 +54,7 @@
        latLngs = layer.getLatLngs();
 
     var p = latLngs;
-    var polygon = L.polygon(p, { color: '#A9AAAA', weight: 4, opacity: 1 }).addTo(peta_desa);
+    var polygon = L.polygon(p, { color: '#A9AAAA', weight: 4, opacity: 1 }).addTo(peta_dusun);
     
     polygon.on('pm:edit', function(e)
 	{
@@ -64,20 +64,20 @@
    });
 
   //Menghapus Peta wilayah
-  peta_desa.on('pm:globalremovalmodetoggled', function(e)
+  peta_dusun.on('pm:globalremovalmodetoggled', function(e)
 	{
         document.getElementById('path').value = '';
   })
 
     //Merubah Peta wilayah yg sudah ada
-    <?php if (!empty($desa['path'])): ?>
-    var daerah_desa = <?=$desa['path']?>;
-    var poligon_desa = L.polygon(daerah_desa).addTo(peta_desa);
-    poligon_desa.on('pm:edit', function(e)
+    <?php if (!empty($dusun['path'])): ?>
+    var daerah_dusun = <?=$dusun['path']?>;
+    var poligon_dusun = L.polygon(daerah_dusun).addTo(peta_dusun);
+    poligon_dusun.on('pm:edit', function(e)
 		{
         document.getElementById('path').value = getLatLong('Poly', e.target).toString();
     })
-    setTimeout(function() {peta_desa.invalidateSize();peta_desa.fitBounds(poligon_desa.getBounds());}, 500);
+    setTimeout(function() {peta_dusun.invalidateSize();peta_dusun.fitBounds(poligon_dusun.getBounds());}, 500);
     <?php endif; ?>
 
    //Fungsi
@@ -109,11 +109,11 @@
 <!-- Menampilkan OpenStreetMap -->
 <div class="content-wrapper">
 	<section class="content-header">
-		<h1>Peta Wilayah <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
+		<h1>Peta Wilayah <?= ucwords($this->setting->sebutan_dusun." ".$dusun['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
 		<ol class="breadcrumb">
-                        <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="<?= site_url("hom_desa/konfigurasi")?>"> Identitas Desa</a></li> 
-			<li class="active">Peta Wilayah <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></li>                    
+                        <li><a href="<?= site_url('sid_core')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url("sid_core/form/$dusun[id]")?>"> Pengelolaan Data <?= ucwords($this->setting->sebutan_dusun)?></a></li>   
+			<li class="active">Peta Wilayah <?= ucwords($this->setting->sebutan_dusun)?></li>                    
 		</ol>
 	</section>
 	<section class="content" id="maincontent">
@@ -125,24 +125,31 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-sm-12">
-							    <div id="map">
-                                                            <input type="hidden" id="path" name="path" value="<?= $desa['path']?>">
-                                                            </div>
-                                         	       </div>
+										
+				                              <div id="map">
+                                                              <input type="hidden" id="path" name="path" value="<?= $dusun['path']?>">
+                                                              <input type="hidden" name="id" id="id"  value="<?= $dusun['id']?>"/>
+            	                                              </div>
+
+							</div>
                                           	</div>
 					</div>
 
-      <div class='box-footer'>
+        <div class='box-footer'>
         <div class='col-xs-12'>
           <button type='reset' class='btn btn-social btn-flat btn-danger btn-sm invisible' ><i class='fa fa-times'></i> Batal</button>
           <button type='submit' class='btn btn-social btn-flat btn-info btn-sm pull-right'><i class='fa fa-check'></i> Simpan</button>
         </div>
       </div>
                               </form>
+                                                        
 				</div>
+
 			</div>
 		</div>
+
 	</section>
+
 </div>
 
 <script>
@@ -151,13 +158,14 @@
       $('#simpan_kantor').click(function(){
       if (!$('#validasi').valid()) return;
 
+      var id = $('#id').val();
       var path = $('#path').val();
       $.ajax(
 			{
         type: "POST",
         url: "<?=$form_action?>",
         dataType: 'json',
-        data: {path: path},
+        data: {path: path, id: id},
 			});
 		});
 	});

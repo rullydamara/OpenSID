@@ -5,22 +5,22 @@
 	{
          
          //Jika posisi kantor rt belum ada, maka posisi peta akan menampilkan seluruh Indonesia
-	<?php if (!empty($desa['lat']) && !empty($desa['lng'])): ?>
-    var posisi = [<?=$desa['lat'].",".$desa['lng']?>];
-    var zoom = <?=$desa['zoom'] ?: 18?>;
+	<?php if (!empty($rt['lat']) && !empty($rt['lng'])): ?>
+    var posisi = [<?=$rt['lat'].",".$rt['lng']?>];
+    var zoom = <?=$rt['zoom'] ?: 18?>;
 	<?php else: ?>
-    var posisi = [-1.0546279422758742,116.71875000000001];
-    var zoom = 4;
+    var posisi = [<?=$dusun['lat'].",".$dusun['lng']?>];
+    var zoom = <?=$dusun['zoom'] ?: 18?>;
 	<?php endif; ?>
 	//Menggunakan https://github.com/codeofsumit/leaflet.pm
 	//Inisialisasi tampilan peta
-  var peta_desa = L.map('map').setView(posisi, zoom);
+  var peta_rt = L.map('map').setView(posisi, zoom);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 	{
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
     id: 'mapbox.streets'
-  }).addTo(peta_desa);
+  }).addTo(peta_rt);
 
   //Tombol yang akan dimunculkan dipeta
   var options =
@@ -38,10 +38,10 @@
   };
 
   //Menambahkan toolbar ke peta
-  peta_desa.pm.addControls(options);
+  peta_rt.pm.addControls(options);
 
   //Menambahkan Peta wilayah
-  peta_desa.on('pm:create', function(e)
+  peta_rt.on('pm:create', function(e)
 	{
     var type = e.layerType;
     var layer = e.layer;
@@ -54,7 +54,7 @@
        latLngs = layer.getLatLngs();
 
     var p = latLngs;
-    var polygon = L.polygon(p, { color: '#A9AAAA', weight: 4, opacity: 1 }).addTo(peta_desa);
+    var polygon = L.polygon(p, { color: '#A9AAAA', weight: 4, opacity: 1 }).addTo(peta_rt);
     
     polygon.on('pm:edit', function(e)
 	{
@@ -64,20 +64,20 @@
    });
 
   //Menghapus Peta wilayah
-  peta_desa.on('pm:globalremovalmodetoggled', function(e)
+  peta_rt.on('pm:globalremovalmodetoggled', function(e)
 	{
         document.getElementById('path').value = '';
   })
 
     //Merubah Peta wilayah yg sudah ada
-    <?php if (!empty($desa['path'])): ?>
-    var daerah_desa = <?=$desa['path']?>;
-    var poligon_desa = L.polygon(daerah_desa).addTo(peta_desa);
-    poligon_desa.on('pm:edit', function(e)
+    <?php if (!empty($rt['path'])): ?>
+    var daerah_rt = <?=$rt['path']?>;
+    var poligon_rt = L.polygon(daerah_rt).addTo(peta_rt);
+    poligon_rt.on('pm:edit', function(e)
 		{
         document.getElementById('path').value = getLatLong('Poly', e.target).toString();
     })
-    setTimeout(function() {peta_desa.invalidateSize();peta_desa.fitBounds(poligon_desa.getBounds());}, 500);
+    setTimeout(function() {peta_rt.invalidateSize();peta_rt.fitBounds(poligon_rt.getBounds());}, 500);
     <?php endif; ?>
 
    //Fungsi
@@ -109,11 +109,11 @@
 <!-- Menampilkan OpenStreetMap -->
 <div class="content-wrapper">
 	<section class="content-header">
-		<h1>Peta Wilayah <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
+		<h1>Peta Wilayah RT <?= $rt['rt']?> RW <?= $rt['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rt['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
 		<ol class="breadcrumb">
-                        <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="<?= site_url("hom_desa/konfigurasi")?>"> Identitas Desa</a></li> 
-			<li class="active">Peta Wilayah <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></li>                    
+                        <li><a href="<?= site_url('sid_core')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url("sid_core/form_rt/$dusun[id]/$rt[rw]/$rt[id]")?>"> Pengelolaan Data RT</a></li>   
+			<li class="active">Peta Wilayah <?= ucwords($this->setting->sebutan_dusun)?></li>                    
 		</ol>
 	</section>
 	<section class="content" id="maincontent">
@@ -125,10 +125,13 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-sm-12">
-							    <div id="map">
-                                                            <input type="hidden" id="path" name="path" value="<?= $desa['path']?>">
-                                                            </div>
-                                         	       </div>
+										
+				       <div id="map">
+                                       <input type="hidden" id="path" name="path" value="<?= $rt['path']?>">
+                                       <input type="hidden" name="id" id="id"  value="<?= $rt['id']?>"/>
+                                       </div>
+                          
+							</div>
                                           	</div>
 					</div>
 
@@ -151,13 +154,14 @@
       $('#simpan_kantor').click(function(){
       if (!$('#validasi').valid()) return;
 
+      var id = $('#id').val();
       var path = $('#path').val();
       $.ajax(
 			{
         type: "POST",
         url: "<?=$form_action?>",
         dataType: 'json',
-        data: {path: path},
+        data: {path: path, id: id},
 			});
 		});
 	});
