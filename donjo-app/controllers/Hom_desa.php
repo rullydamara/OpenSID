@@ -52,7 +52,12 @@ class Hom_desa extends Admin_Controller {
 	{
 		$data['desa'] = $this->config_model->get_data();
 		$data['form_action'] = site_url("hom_desa/update_kantor_maps/");
+
+                $header = $this->header_model->get_data();
+		$this->load->view('header', $header);
+		$this->load->view('nav', $nav);
 		$this->load->view("home/ajax_kantor_desa_maps", $data);
+		$this->load->view('footer');
 	}
 
 	public function ajax_wilayah_maps()
