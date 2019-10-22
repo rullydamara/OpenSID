@@ -6,11 +6,11 @@
          
          //Jika posisi kantor dusun belum ada, maka posisi peta akan menampilkan seluruh Indonesia
 	<?php if (!empty($dusun['lat']) && !empty($dusun['lng'])): ?>
-    var posisi = [<?=$dusun['lat'].",".$dusun['lng']?>];
-    var zoom = <?=$dusun['zoom'] ?: 10?>;
+         var posisi = [<?=$dusun['lat'].",".$dusun['lng']?>];
+         var zoom = <?=$dusun['zoom'] ?: 10?>;
 	<?php else: ?>
-    var posisi = [<?=$desa['lat'].",".$desa['lng']?>];
-    var zoom = <?=$desa['zoom'] ?: 10?>;
+         var posisi = [<?=$desa['lat'].",".$desa['lng']?>];
+         var zoom = <?=$desa['zoom'] ?: 10?>;
 	<?php endif; ?>
 	//Menggunakan https://github.com/codeofsumit/leaflet.pm
 	//Inisialisasi tampilan peta
@@ -111,12 +111,13 @@
 	<section class="content-header">
 		<h1>Peta Wilayah <?= ucwords($this->setting->sebutan_dusun." ".$dusun['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
 		<ol class="breadcrumb">
-                        <li><a href="<?= site_url('sid_core')?>"><i class="fa fa-home"></i> Home</a></li>
+                        <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url('sid_core')?>"> Daftar <?= ucwords($this->setting->sebutan_dusun)?></a></li>
 			<li><a href="<?= site_url("sid_core/form/$dusun[id]")?>"> Pengelolaan Data <?= ucwords($this->setting->sebutan_dusun)?></a></li>   
 			<li class="active">Peta Wilayah <?= ucwords($this->setting->sebutan_dusun)?></li>                    
 		</ol>
 	</section>
-	<section class="content" id="maincontent">
+       	<section class="content" id="maincontent">
 		<div class="row">
 			<div class="col-md-12">
                                 <div class="box box-info">
@@ -125,12 +126,11 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-sm-12">
-										
-				                              <div id="map">
+							      <div id="map">
                                                               <input type="hidden" id="path" name="path" value="<?= $dusun['path']?>">
                                                               <input type="hidden" name="id" id="id"  value="<?= $dusun['id']?>"/>
+                                                              <input type="hidden" name="dusun" id="dusun"  value="<?= $dusun['dusun']?>"/>
             	                                              </div>
-
 							</div>
                                           	</div>
 					</div>
@@ -149,7 +149,7 @@
 		</div>
 
 	</section>
-
+                                                      
 </div>
 
 <script>
@@ -160,12 +160,13 @@
 
       var id = $('#id').val();
       var path = $('#path').val();
+      var dusun = $('#dusun').val();
       $.ajax(
 			{
         type: "POST",
         url: "<?=$form_action?>",
         dataType: 'json',
-        data: {path: path, id: id},
+        data: {path: path, id: id, dusun: dusun},
 			});
 		});
 	});

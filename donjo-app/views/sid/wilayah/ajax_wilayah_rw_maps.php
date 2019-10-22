@@ -4,14 +4,14 @@
 	window.onload = function()
 	{
          
-         //Jika posisi kantor rt belum ada, maka posisi peta akan menampilkan seluruh Indonesia
-	<?php if (!empty($rw['lat']) && !empty($rw['lng'])): ?>
-    var posisi = [<?=$rw['lat'].",".$rw['lng']?>];
-    var zoom = <?=$rw['zoom'] ?: 10?>;
-	<?php else: ?>
-    var posisi = [<?=$dusun['lat'].",".$dusun['lng']?>];
-    var zoom = <?=$dusun['zoom'] ?: 18?>;
-	<?php endif; ?>
+         //Jika posisi kantor rw belum ada, maka posisi peta akan menampilkan seluruh Indonesia
+	<?php if (!empty($rw['lat'] && !empty($rw['lng']))): ?>
+			var posisi = [<?=$rw['lat'].",".$rw['lng']?>];
+			var zoom = <?=$rw['zoom'] ?: 16?>;
+		<?php else: ?>
+			var posisi = [<?=$dusun['lat'].",".$dusun['lng']?>];
+			var zoom = <?=$dusun['zoom'] ?: 16?>;
+		<?php endif; ?>
 	//Menggunakan https://github.com/codeofsumit/leaflet.pm
 	//Inisialisasi tampilan peta
   var peta_rw = L.map('map').setView(posisi, zoom);
@@ -111,7 +111,9 @@
 	<section class="content-header">
 		<h1>Peta Wilayah RW <?= $rw['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rw['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
 		<ol class="breadcrumb">
-                        <li><a href="<?= site_url('sid_core')?>"><i class="fa fa-home"></i> Home</a></li>
+                        <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url('sid_core')?>"> Daftar <?= ucwords($this->setting->sebutan_dusun)?></a></li>
+			<li><a href="<?= site_url("sid_core/sub_rw/$id_dusun")?>"> Daftar RW</a></li>
 			<li><a href="<?= site_url("sid_core/form_rw/$dusun[id]/$rw[rw]")?>"> Pengelolaan Data RW</a></li>   
 			<li class="active">Peta Wilayah RW</li>                    
 		</ol>
@@ -129,6 +131,8 @@
 				       <div id="map">
                                        <input type="hidden" id="path" name="path" value="<?= $rw['path']?>">
                                        <input type="hidden" name="id" id="id"  value="<?= $rw['id']?>"/>
+                                       <input type="hidden" name="rw" id="rw"  value="<?= $rw['rw']?>"/>
+                                       <input type="hidden" name="dusun" id="dusun"  value="<?= $rw['dusun']?>"/>
                                        </div>
                           
 							</div>
@@ -157,14 +161,18 @@
 
       var id = $('#id').val();
       var path = $('#path').val();
-       
+      var rw = $('#rw').val();
+      var dusun = $('#dusun').val(); 
       $.ajax(
 			{
         type: "POST",
         url: "<?=$form_action?>",
         dataType: 'json',
-        data: {path: path, id: id},
+        data: {path: path, id: id, rw: rw, dusun: dusun},
 			});
 		});
 	});
 </script>
+
+<script src="<?= base_url()?>assets/js/validasi.js"></script>
+<script src="<?= base_url()?>assets/js/jquery.validate.min.js"></script>

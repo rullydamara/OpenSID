@@ -25,70 +25,59 @@
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="form-group">
-													<label class="col-sm-3 control-label" for="rw">RW</label>
+													<label class="col-sm-3 control-label" for="rw">Nama RW</label>
 													<div class="col-sm-7">
-														<input  id="rw" class="form-control input-sm digits required" type="text" placeholder="Nomor RW" name="rw" value="<?= $rw?>">
+														<input  id="rw" class="form-control input-sm required" type="text" placeholder="Nama RW" name="rw" value="<?= $rw?>">
 													</div>
 												</div>
 											</div>
-											<?php if ($rw): ?>
+
+                                                                                       <?php if ($rw): ?>
 												<div class="col-sm-12">
 													<div class="form-group">
-														<label class="col-sm-3 control-label" for="kepala_lama">Ketua RW Sebelumnya</label>
+														<label class="col-sm-3 control-label" for="kepala_lama">Kepala RW Sebelumnya</label>
 														<div class="col-sm-7">
 															<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-																<strong><?= $individu['nama']?></strong>
-																<br />NIK - <?= $individu['nik']?>
-															</p>
+																<strong><?= $individu["nama"]?></strong>
+																<br/>NIK - <?= $individu["nik"]?>
+															</P>
 														</div>
 													</div>
 												</div>
 											<?php endif; ?>
 											<div class="col-sm-12">
 												<div class="form-group">
-													<label class="col-sm-3 control-label" for="id_kepala">Ketua RW</label>
+													<label class="col-sm-3 control-label" for="id_kepala">NIK / Nama Kepala RW</label>
 													<div class="col-sm-7">
-														<select class="form-control select2 input-sm" style="width: 100%;" id="id_kepala" name="id_kepala">
+														<select class="form-control select2" style="width: 100%;" id="id_kepala" name="id_kepala">
 															<option selected="selected">-- Silakan Masukan NIK / Nama--</option>
 															<?php foreach ($penduduk as $data): ?>
-																<option value="<?= $data['id']?>">NIK :<?= $data['nik']." - ".$data['nama']." - ".$data['dusun']?></option>
+																<option value="<?= $data['id']?>">NIK :<?= $data['nik']." - ".$data['nama']." - ".$data['rw']?></option>
 															<?php endforeach; ?>
 														</select>
 													</div>
 												</div>
 											</div>
+										</div>
+									
 
- 										</div>
-
-<div class="form-group">
+                                                 <div class="form-group">
 								<label class="col-sm-3 control-label" for="kode_propinsi">Peta Kantor / Wilayah RW</label>
 								<div class="col-sm-9">
-									<a href="<?=site_url("sid_core/ajax_kantor_rw_maps/$dusun/$rw")?>" data-remote="false" data-toggle="modal" data-target="#mapBox" data-title="Peta Kantor RW <?= $rw?> <?= ucwords($this->setting->sebutan_dusun." ".$dusun)?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?>" class="btn btn-social btn-flat bg-navy btn-sm"><i class='fa fa-map-marker'></i> Kantor RW</a>
-									<a href="<?=site_url("sid_core/ajax_wilayah_rw_maps/$dusun/$rw")?>" class="btn btn-social btn-flat bg-navy btn-sm"><i class='fa fa-map'></i> Wilayah RW</a>
+                                                                <a href="<?=site_url("sid_core/ajax_kantor_rw_maps/$id_dusun/$rw")?>" class="btn btn-social btn-flat bg-navy btn-sm"><i class='fa fa-map-marker'></i> Kantor RW</a>
+                                                                <a href="<?=site_url("sid_core/ajax_wilayah_rw_maps/$id_dusun/$rw")?>" class="btn btn-social btn-flat bg-navy btn-sm"><i class='fa fa-map'></i> Wilayah RW</a>
 								</div>
 							</div>
 						</div>
+
 						<div class='box-footer'>
 							<div class='col-xs-12'>
-								<button type='reset' class='btn btn-social btn-flat btn-danger btn-sm' ><i class='fa fa-times'></i> Batal</button>
+								<button type='reset' class='btn btn-social btn-flat btn-danger btn-sm invisible' ><i class='fa fa-times'></i> Batal</button>
 								<button type='submit' class='btn btn-social btn-flat btn-info btn-sm pull-right'><i class='fa fa-check'></i> Simpan</button>
 							</div>
-						</div>
-						<div  class="modal fade" id="mapBox" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-							<div class='modal-dialog'>
-								<div class='modal-content'>
-									<div class='modal-header'>
-										<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-										<h4 class='modal-title' id='myModalLabel'></h4>
-									</div>
-									<div class="fetched-data"></div>
-								</div>
-							</div>
-						</div>
-
+						</div>				                                              
 								</form>
 							</div>
-
                                          	</div>
 					</div>
 				</div>
@@ -96,4 +85,140 @@
 		</div>
 	</section>
 </div>
+<script>
+   $(document).ready(function(){
+     $("[rel=tooltip]").tooltip({ placement: 'top'});
+   });
+</script>
+<!-- Notification Script -->
+<script>
+   <?php
+      $success = $this->session->flashdata('success');
+      $error   = $this->session->flashdata('error');
+      if (!empty($success))
+       {
+      ?>
+    $.notify({
+         
+         icon: 'glyphicon glyphicon-info-sign',
+         title: '<b>Sukses</b><br>',
+         message: '<?php echo $success ?>',
+     },
+     {
+         
+         
+         type: "success success-noty col-md-3",
+         allow_dismiss: true,
+         placement: {
+             from: "top",
+             align: "right"
+         },
+         offset: 20,
+         spacing: 10,
+         z_index: 1431,
+         delay: 5000,
+         timer: 1000,
+         animate: {
+             enter: 'animated bounceInDown',
+             exit: 'animated bounceOutUp'
+         }
+     });
+   <?php
+      } 
+      if (!empty($error))
+       {
+      ?>
+    $.notify({
+             
+             icon: 'glyphicon glyphicon-info-sign',
+             title: '<b>Ada Kesalahan</b><br>',
+             message: '<?php echo $error ?>',
+         },{
+             
+             
+             type: "danger noty-color col-md-3",
+             allow_dismiss: true,
+             placement: {
+                 from: "top",
+                 align: "right"
+             },
+             offset: 20,
+             spacing: 10,
+             z_index: 1431,
+             delay: 5000,
+             timer: 1000,
+             animate: {
+                 enter: 'animated fadeInDown',
+                 exit: 'animated fadeOutUp'
+             }
+         });
+    <?php            
+      }
+      ?>
+   
+</script>  
+<script>
+   <?php
+      if (!empty($message))
+        {
+      ?>
+    $.notify({
+         
+         icon: 'glyphicon glyphicon-info-sign',
+         title: '<b>Notifikasi</b><br>',
+         message: '<?php echo $message;?>',
+     },
+     {
+         
+         type: "success success-noty col-md-3 col-md-offset-2",
+         allow_dismiss: true,
+         placement: {
+             from: "top",
+             align: "right"
+         },
+         offset: 20,
+         spacing: 10,
+         z_index: 1431,
+         delay: 5000,
+         timer: 1000,
+         animate: {
+             enter: 'animated bounceInDown',
+             exit: 'animated bounceOutUp'
+         }
+     });
+   <?php
+      }
+      ?> 
+</script> 
+<script>
+   <?php  
+      if (!empty($_GET['err_msg']))  
+      {
+      ?> 
+      $.notify({
+      title: '<strong><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Error!</strong>',
+      message: '<?php echo $_GET['err_msg'] ?>'
+      },{
+        type: 'danger alert-danger-alt col-md-3 col-md-offset-3'
+      });
+     <?php 
+      } 
+       elseif (!empty($_GET['success_msg']))  
+      {
+       ?>
+   
+      $.notify({
+      title: '<strong> <span class= "glyphicon glyphicon-ok"></span> Success!</strong>',
+      message: '<?php echo $_GET['success_msg'] ?>'
+      },{
+        type: 'success alert-success-alt col-md-3'
+      });
+   
+    <?php    
+      }    
+      ?>  
+   
+</script>
 
+<script src="<?= base_url()?>assets/js/validasi.js"></script>
+<script src="<?= base_url()?>assets/js/jquery.validate.min.js"></script>

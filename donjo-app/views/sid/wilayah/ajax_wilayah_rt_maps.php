@@ -111,9 +111,12 @@
 	<section class="content-header">
 		<h1>Peta Wilayah RT <?= $rt['rt']?> RW <?= $rt['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rt['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
 		<ol class="breadcrumb">
-                        <li><a href="<?= site_url('sid_core')?>"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="<?= site_url("sid_core/form_rt/$dusun[id]/$rt[rw]/$rt[id]")?>"> Pengelolaan Data RT</a></li>   
-			<li class="active">Peta Wilayah <?= ucwords($this->setting->sebutan_dusun)?></li>                    
+                        <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url('sid_core')?>"> Daftar <?= ucwords($this->setting->sebutan_dusun)?></a></li>
+                        <li><a href="<?= site_url("sid_core/sub_rw/$id_dusun")?>"> Daftar RW</a></li>
+			<li><a href="<?= site_url("sid_core/sub_rt/$id_dusun/$rw")?>"> Daftar RT</a></li>
+			<li><a href="<?= site_url("sid_core/form_rt/$id_dusun/$rt[rw]/$rt[id]")?>"> Pengelolaan Data RT</a></li>   
+			<li class="active">Peta Wilayah RT </li>                    
 		</ol>
 	</section>
 	<section class="content" id="maincontent">
@@ -125,13 +128,13 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-sm-12">
-										
-				       <div id="map">
-                                       <input type="hidden" id="path" name="path" value="<?= $rt['path']?>">
-                                       <input type="hidden" name="id" id="id"  value="<?= $rt['id']?>"/>
-                                       </div>
-                          
-							</div>
+				      	                       <div id="map">
+                                                               <input type="hidden" id="path" name="path" value="<?= $rt['path']?>">
+                                                               <input type="hidden" name="id" id="id"  value="<?= $rt['id']?>"/>
+                                                               <input type="hidden" name="rw" id="rw"  value="<?= $rt['rw']?>"/>
+                                                               <input type="hidden" name="dusun" id="dusun"  value="<?= $rt['dusun']?>"/>
+                                                               <input type="hidden" name="rt" id="rt"  value="<?= $rt['rt']?>"/>
+                                                        </div>
                                           	</div>
 					</div>
 
@@ -156,12 +159,15 @@
 
       var id = $('#id').val();
       var path = $('#path').val();
+      var dusun = $('#dusun').val();
+      var rw = $('#rw').val();
+      var rt = $('#rt').val();
       $.ajax(
 			{
         type: "POST",
         url: "<?=$form_action?>",
         dataType: 'json',
-        data: {path: path, id: id},
+        data: {path: path, id: id, rw: rw, dusun: dusun, rt: rt},
 			});
 		});
 	});
