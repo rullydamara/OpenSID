@@ -87,8 +87,8 @@
 		<ol class="breadcrumb">
                         <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
 			<li><a href="<?= site_url('sid_core')?>"> Daftar <?= ucwords($this->setting->sebutan_dusun)?></a></li>
-                        <li><a href="<?= site_url("sid_core/sub_rt/$id_dusun")?>"> Daftar RW</a></li>
-			<li><a href="<?= site_url("sid_core/sub_rt/$id_dusun/$rw")?>"> Daftar RT</a></li>
+                        <li><a href="<?= site_url("sid_core/sub_rw/$id_dusun")?>"> Daftar RW</a></li>
+			<li><a href="<?= site_url("sid_core/sub_rt/$id_dusun/$rt[rw]")?>"> Daftar RT</a></li>
 			<li class="active">Lokasi Kantor RT </li>                    
 		</ol>
 	</section>
