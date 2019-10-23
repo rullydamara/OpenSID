@@ -22,6 +22,35 @@
     id: 'mapbox.streets'
   }).addTo(peta_rt);
 
+  //Tombol uplad import file GPX
+   var style = {
+            color: 'red',
+            opacity: 1.0,
+            fillOpacity: 1.0,
+            weight: 4,
+            clickable: false
+        };
+
+   L.Control.FileLayerLoad.LABEL = '<img class="icon" src="<?= base_url()?>assets/images/folder.svg" alt="file icon"/>';
+        control = L.Control.fileLayerLoad({
+            fitBounds: true,
+            layerOptions: {
+                style: style,
+                pointToLayer: function (data, latlng) {
+                    return L.circleMarker(
+                        latlng,
+                        { style: style }
+                    );
+                }
+            }
+        });
+        control.addTo(peta_rt);
+        control.loader.on('data:loaded', function (e) {
+            var layer = e.layer;
+            console.log(layer);
+        });
+  
+
   //Tombol yang akan dimunculkan dipeta
   var options =
 	{
@@ -72,6 +101,10 @@
     //Merubah Peta wilayah yg sudah ada
     <?php if (!empty($rt['path'])): ?>
     var daerah_rt = <?=$rt['path']?>;
+
+    //Titik awal dan titik akhir poligon harus sama
+    daerah_rt[0].push(daerah_rt[0][0]);
+
     var poligon_rt = L.polygon(daerah_rt).addTo(peta_rt);
     poligon_rt.on('pm:edit', function(e)
 		{
@@ -104,18 +137,22 @@
 		width:100%;
 		height:65vh
 	}
+        .icon {
+        max-width: 70%;
+        max-height: 70%;
+        margin: 4px;
+        }
 
 </style>
 <!-- Menampilkan OpenStreetMap -->
 <div class="content-wrapper">
 	<section class="content-header">
-		<h1>Peta Wilayah RT <?= $rt['rt']?> RW <?= $rt['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rt['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
+		<h1>Peta Wilayah RT <?= $rt['rt']?> RW <?= $rt['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rt['dusun'])?></h1>
 		<ol class="breadcrumb">
                         <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
 			<li><a href="<?= site_url('sid_core')?>"> Daftar <?= ucwords($this->setting->sebutan_dusun)?></a></li>
                         <li><a href="<?= site_url("sid_core/sub_rw/$id_dusun")?>"> Daftar RW</a></li>
 			<li><a href="<?= site_url("sid_core/sub_rt/$id_dusun/$rw")?>"> Daftar RT</a></li>
-			<li><a href="<?= site_url("sid_core/form_rt/$id_dusun/$rt[rw]/$rt[id]")?>"> Pengelolaan Data RT</a></li>   
 			<li class="active">Peta Wilayah RT </li>                    
 		</ol>
 	</section>
@@ -172,3 +209,7 @@
 		});
 	});
 </script>
+<script src="<?= base_url()?>assets/js/validasi.js"></script>
+<script src="<?= base_url()?>assets/js/jquery.validate.min.js"></script>
+<script src="<?= base_url()?>assets/js/leaflet.filelayer.js"></script>
+<script src="<?= base_url()?>assets/js/togeojson.js"></script> 

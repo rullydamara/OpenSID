@@ -83,13 +83,12 @@
 <!-- Menampilkan OpenStreetMap dalam Box modal bootstrap (AdminLTE)  -->
 <div class="content-wrapper">
 	<section class="content-header">
-		<h1>Lokasi Kantor RT <?= $rt['rt']?> RW <?= $rt['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rt['dusun'])?> <?= ucwords($this->setting->sebutan_desa." ".$desa['nama_desa'])?></h1>
+		<h1>Lokasi Kantor RT <?= $rt['rt']?> RW <?= $rt['rw']?> <?= ucwords($this->setting->sebutan_dusun." ".$rt['dusun'])?></h1>
 		<ol class="breadcrumb">
                         <li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
 			<li><a href="<?= site_url('sid_core')?>"> Daftar <?= ucwords($this->setting->sebutan_dusun)?></a></li>
                         <li><a href="<?= site_url("sid_core/sub_rt/$id_dusun")?>"> Daftar RW</a></li>
 			<li><a href="<?= site_url("sid_core/sub_rt/$id_dusun/$rw")?>"> Daftar RT</a></li>
-			<li><a href="<?= site_url("sid_core/form_rt/$id_dusun/$rt[rw]/$rt[id]")?>"> Pengelolaan Data RT</a></li>   
 			<li class="active">Lokasi Kantor RT </li>                    
 		</ol>
 	</section>
