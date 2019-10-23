@@ -427,10 +427,10 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-		$msg = "Lokasi Kantor $sebutan_desa $namadesa Belum Dilengkapi";
-		$this->session->set_flashdata('error',$msg);
+		$_SESSION['success'] = -1;
+                $_SESSION['error_msg'] = "Lokasi Kantor $sebutan_desa $namadesa Belum Dilengkapi";
 		redirect("sid_core/form/$iddusun");
-		}                                       		
+                }                                       		
 	}
 
         public function ajax_wilayah_dusun_maps($dusun='')
@@ -452,8 +452,8 @@ class Sid_Core extends Admin_Controller {
 		}
 		else
 		{
-		$msg = "Peta Wilayah $sebutan_desa $namadesa Belum Dilengkapi";
-		$this->session->set_flashdata('error',$msg);
+                $_SESSION['success'] = -1;
+                $_SESSION['error_msg'] = "Peta Wilayah $sebutan_desa $namadesa Belum Dilengkapi";
 		redirect("sid_core/form/$iddusun");
 		}  
 	}
@@ -471,10 +471,9 @@ class Sid_Core extends Admin_Controller {
               	$this->wilayah_model->update_kantor_dusun_map($id);
 		}
 		else
-		{
-                $msg = "Lokasi Kantor $sebutan_dusun $namadusun berhasil disimpan";
-		$this->session->set_flashdata('success',$msg);
+		{            
                 redirect("sid_core/form/$iddusun");
+                $_SESSION['success'] = 1;
                 }
 	}
         
@@ -492,9 +491,8 @@ class Sid_Core extends Admin_Controller {
 		}
 		else
 		{
-		$msg = "Peta Wilayah $sebutan_dusun $namadusun Berhasil Disimpan";
-		$this->session->set_flashdata('success',$msg);
 		redirect("sid_core/form/$iddusun");
+                $_SESSION['success'] = 1;                
 		}  
 	}
 
@@ -520,9 +518,9 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-		$msg = "Lokasi Kantor $sebutan_dusun $dusun Belum Dilengkapi";
-		$this->session->set_flashdata('error',$msg);
-		redirect("sid_core/form_rw/$id_dusun/$rw");
+		$_SESSION['success'] = -1;
+                $_SESSION['error_msg'] = "Lokasi Kantor $sebutan_dusun $dusun Belum Dilengkapi";
+                redirect("sid_core/form_rw/$id_dusun/$rw");
 		} 
 	}
         
@@ -547,8 +545,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-		$msg = "Peta Wilayah $sebutan_dusun $dusun Belum Dilengkapi";
-		$this->session->set_flashdata('error',$msg);
+                $_SESSION['success'] = -1;
+                $_SESSION['error_msg'] = "Peta Wilayah $sebutan_dusun $dusun Belum Dilengkapi";
 		redirect("sid_core/form_rw/$id_dusun/$rw");
 		}
 	}
@@ -568,9 +566,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-                $msg = "Lokasi Kantor RW $namarw $sebutan_dusun $namadusun berhasil disimpan";
-		$this->session->set_flashdata('success',$msg);
                 redirect("sid_core/form_rw/$id_dusun/$namarw");
+                $_SESSION['success'] = 1;
                 }
 	}
 
@@ -589,9 +586,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-		$msg = "Peta Wilayah RW $namarw $sebutan_dusun $namadusun Berhasil Disimpan";
-		$this->session->set_flashdata('success',$msg);
 		redirect("sid_core/form_rw/$id_dusun/$namarw");
+                $_SESSION['success'] = 1;
 		} 
 		
 	}
@@ -620,8 +616,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-		$msg = "Lokasi Kantor $sebutan_dusun $dusun Belum Dilengkapi";
-		$this->session->set_flashdata('error',$msg);
+		$_SESSION['success'] = -1;
+                $_SESSION['error_msg'] = "Lokasi Kantor $sebutan_dusun $dusun Belum Dilengkapi";
 		redirect("sid_core/form_rt/$id_dusun/$rw/$idrt");
 		} 
 	}
@@ -650,8 +646,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-		$msg = "Peta Wilayah $sebutan_dusun $dusun Belum Dilengkapi";
-		$this->session->set_flashdata('error',$msg);
+		$_SESSION['success'] = -1;
+                $_SESSION['error_msg'] = "Peta Wilayah $sebutan_dusun $dusun Belum Dilengkapi";
 		redirect("sid_core/form_rt/$id_dusun/$rw/$idrt");
 		}
 	}
@@ -673,9 +669,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-                $msg = "Lokasi Kantor RT $namart RW $namarw $sebutan_dusun $namadusun berhasil disimpan";
-		$this->session->set_flashdata('success',$msg);
                 redirect("sid_core/form_rt/$id_dusun/$namarw/$idrt");
+                $_SESSION['success'] = 1;
                 }
 	}
 
@@ -696,9 +691,8 @@ class Sid_Core extends Admin_Controller {
                 }
 		else
 		{
-                $msg = "Peta Wilayah RT $namart RW $namarw $sebutan_dusun $namadusun Berhasil Disimpan";
-		$this->session->set_flashdata('success',$msg);
                 redirect("sid_core/form_rt/$id_dusun/$namarw/$idrt");
+                $_SESSION['success'] = 1;
                 }
 	}
 
